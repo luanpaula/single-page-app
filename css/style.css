@@ -1,0 +1,534 @@
+/* --- Variaveis Globais e Sistema de Temas --- */
+:root {
+    /* Tema Claro (padrao) */
+    --bg-primary: #f4f7fa;
+    --bg-secondary: #ffffff;
+    --text-primary: #1a202c;
+    --text-secondary: #4a5568;
+    --border-color: #e2e8f0;
+    --accent-color: #3182ce;
+    
+    --color-income: #2f855a; /* green */
+    --color-expense: #c53030; /* red */
+    --bg-income-light: #f0fff4;
+    --bg-expense-light: #fff5f5;
+}
+
+[data-theme="dark"] {
+    --bg-primary: #1a202c;
+    --bg-secondary: #2d3748;
+    --text-primary: #e2e8f0;
+    --text-secondary: #a0aec0;
+    --border-color: #4a5568;
+    --accent-color: #63b3ed;
+
+    --bg-income-light: #2d3748;
+    --bg-expense-light: #2d3748;
+}
+
+/* --- Estilos Base --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.2s, color 0.2s;
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Trava o body na altura da tela */
+    overflow: hidden; /* Impede o scroll do body principal */
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 2rem;
+    height: 65px;
+    flex-shrink: 0; /* Impede que o header encolha */
+}
+
+#theme-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+.app-container {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden; /* Impede que os filhos (sidebar/content) estourem */
+}
+
+.sidebar-nav {
+    width: 220px;
+    flex-shrink: 0;
+    background-color: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    height: 100%;
+    overflow-y: hidden; /* Impede o scroll da sidebar */
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 1rem 0;
+    margin: 0;
+}
+
+.sidebar-nav .nav-link {
+    display: block;
+    padding: 0.75rem 2rem;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.sidebar-nav .nav-link:hover {
+    background-color: var(--bg-primary);
+}
+
+.sidebar-nav .nav-link.active {
+    color: var(--accent-color);
+    border-right: 3px solid var(--accent-color);
+}
+
+#app-content {
+    flex-grow: 1;
+    padding: 2rem;
+    overflow-y: auto; /* Permite o scroll APENAS no conteúdo principal */
+    height: 100%; /* Ocupa 100% da altura do app-container */
+    box-sizing: border-box; /* Garante que o padding não estoure a altura */
+}
+
+.card {
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.badge-income {
+    color: var(--color-income);
+    background-color: var(--bg-income-light);
+    border: 1px solid var(--color-income);
+}
+
+.badge-expense {
+    color: var(--color-expense);
+    background-color: var(--bg-expense-light);
+    border: 1px solid var(--color-expense);
+}
+
+/* --- Layout Dashbord --- */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);/* Padrao de 3 colunas */
+    gap: 1.5rem; /* Espacamento entre os cards */
+}
+
+/* Remove o margin-bottom do .card APENAS quando for filho de .dashboard-cards */
+.dashboard-cards > .card {
+    margin-bottom: 0;
+}
+
+.dashboard-charts {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 colunas pros graficos */
+    gap: 1.5rem;
+}
+
+
+/* --- BREAKPOINTS OBRIGATORIOS --- */
+
+/* Desktop (> 1024px) - Layout atual ja é o desktop */
+
+/* Notebook (768px - 1024px) */
+@media (max-width: 1024px) {
+    .sidebar-nav {
+        width: 180px;
+    }
+    .sidebar-nav .nav-link {
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+/* Tablet (Até 768px) */
+@media (max-width: 768px) {
+    body {
+        height: auto;
+        overflow: auto;
+    }
+    
+    .app-container {
+        flex-direction: column;
+        overflow: visible;
+    }
+
+    .sidebar-nav {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        overflow-y: hidden; /* tira scroll na sidebar */
+    }
+
+    #app-content {
+        height: auto;
+        overflow-y: visible; /* Remove o scroll interno */
+    }
+    /* --- FIM DA CORREÇÃO --- */
+
+    .dashboard-cards {
+        grid-template-columns: 1fr; /* Forca 1 coluna */
+    }
+    .dashboard-charts {
+        grid-template-columns: 1fr; /* Forca 1 coluna */
+    }
+}
+
+/* Mobile (Até 480px) */
+@media (max-width: 480px) {
+    .app-header {
+        padding: 0 1rem;
+    }
+    #app-content {
+        padding: 1rem;
+    }
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .pie-chart-container {
+        display: flex; /* Reverte pra flex pra empilhar facil */
+        flex-direction: column; 
+        gap: 1.5rem;
+    }
+    
+    .pie-chart {
+        width: 75%; /* Ocupa 75% da largura do card */
+        max-width: 200px; /* Limite maximo de tamanho */
+        height: auto; /* Deixa o aspect-ratio cuida da altura */
+        align-self: center; /* Centraliza o grafico */
+    }
+    
+    .pie-legend {
+        width: 100%;
+    }
+}
+
+/* Mobile Retrato (< 360px) */
+@media (max-width: 360px) {
+    /* Ajustes finos pra telas mt pequensa */
+}
+
+/* --- Estilos de Formulario --- */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.form-group input,
+.form-group select {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px var(--accent-color);
+}
+
+.form-actions {
+    grid-column: 1 / -1; /* Ocupa a linha inteira */
+    text-align: right;
+    margin-top: 1rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.85;
+}
+
+/* --- Estilos de Validacao --- */
+.form-group input.invalid,
+.form-group select.invalid {
+    border-color: var(--color-expense);
+}
+
+.form-group .validation-message {
+    font-size: 0.875rem;
+    color: var(--color-expense);
+    margin-top: 0.25rem;
+    display: none; /* Oculto por padrao */
+}
+
+.form-group input.invalid + .validation-message,
+.form-group select.invalid + .validation-message {
+    display: block; /* Exibe quando invalido */
+}
+
+/* --- Estilos Botoes de Acao --- */
+.btn-edit, .btn-delete {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+    margin-right: 0.25rem;
+}
+.btn-edit {
+    background-color: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+}
+.btn-delete {
+    background-color: transparent;
+    border: 1px solid var(--color-expense);
+    color: var(--color-expense);
+}
+
+/* --- Graficos (Dashboard) --- */
+.pie-chart-container {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr; /* 1 parte pro grafico, 1.5 pra legenda (40% / 60%) */
+    align-items: center;
+    gap: 2rem;
+}
+
+.pie-chart {
+    width: 100%; /* Ocupa 100% da coluna do grid */
+    min-width: 100px; /* Tamanho minimo pra nao sumir */
+    aspect-ratio: 1 / 1; /* FORCA A SER UM QUADRADO, e o border-radius o faz circulo */
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+}
+
+.pie-legend {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* A prop flex-grow: 1 foi removida */
+}
+
+.pie-legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+.legend-label {
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.legend-amount {
+    font-weight: 600;
+    margin-left: auto; /* Joga o valor pra direita */
+    padding-left: 1rem;
+    color: var(--text-primary);
+}
+
+/* --- Estilos dos Graficos (Linha SVG) --- */
+.line-chart-container {
+    width: 100%;
+}
+
+.line-chart {
+    width: 100%;
+    height: auto;
+    overflow: visible; /* Garante que os pontos nao sejam cortados */
+}
+
+.line-chart-axis {
+    stroke: var(--border-color);
+    stroke-width: 1;
+}
+
+.line-chart-label {
+    /* O tamanho da fonte em SVG é relativo ao viewBox */
+    font-size: 8px; 
+    fill: var(--text-secondary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.line-chart-path-income {
+    stroke: var(--color-income);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.line-chart-path-expense {
+    stroke: var(--color-expense);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.line-chart-point-income {
+    fill: var(--color-income);
+    stroke: var(--bg-secondary); /* Efeito de "buraco" no meio */
+    stroke-width: 1.5; /* Relativo ao viewBox */
+}
+
+.line-chart-point-expense {
+    fill: var(--color-expense);
+    stroke: var(--bg-secondary);
+    stroke-width: 1.5;
+}
+
+/* --- NOVOS ESTILOS: Lista de Transacoes (Cards) --- */
+
+.transaction-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.transaction-item.card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Permite quebrar em telas menor */
+    gap: 1rem;
+    padding: 1rem 1.5rem; /* Um pouco menos de padding vertical q um card normal */
+}
+
+/* --- Lado Esquerdo: Icone e Infos --- */
+.transaction-details {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    /* Faz ocupar o espaco, mas permite quebrar */
+    flex-basis: 300px;
+    flex-grow: 1; 
+}
+
+.transaction-icon {
+    font-size: 1.75rem;
+    line-height: 1;
+    padding: 0.75rem;
+    border-radius: 12px;
+    background-color: var(--bg-primary);
+}
+
+.transaction-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.transaction-description {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.transaction-category-date {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* --- Lado Direito: Valor e Acoes --- */
+.transaction-amount-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-basis: 250px; /* Garante espaco */
+    flex-grow: 1;
+    justify-content: flex-end; /* Alinha a direita */
+}
+
+.transaction-amount {
+    font-size: 1.1rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.transaction-amount-income {
+    color: var(--color-income);
+}
+
+.transaction-amount-expense {
+    color: var(--color-expense);
+}
+
+.transaction-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* --- Responsividade da Lista --- */
+@media (max-width: 640px) {
+    .transaction-item.card {
+        padding: 1rem;
+    }
+
+    /* Em telas pequenas, joga Valor/Acoes pra direita e centraliza */
+    .transaction-amount-actions {
+        flex-basis: 100%; /* Ocupa a linha toda */
+        justify-content: space-between; /* Espaca o valor e os botoes */
+        margin-top: 0.5rem;
+    }
+
+    .transaction-icon {
+        font-size: 1.5rem;
+        padding: 0.5rem;
+    }
+
+    .transaction-description {
+        font-size: 1rem;
+    }
+}
